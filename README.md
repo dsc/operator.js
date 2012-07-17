@@ -192,3 +192,6 @@ Log base-2.
 #### strip(s)
 
 
+## License
+
+MIT: http://dsc.mit-license.org/
