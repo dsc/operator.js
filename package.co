@@ -1,0 +1,16 @@
+name                            : 'operator'
+version                         : '0.1.0'
+description                     : 'Functional operators'
+homepage                        : 'https://github.com/dsc/operator.js/'
+keywords                        : <[ functional operator util server client browser ]>
+author                          : 'David Schoonover <dsc@less.ly> (http://less.ly)'
+
+main                            : './operator'
+devDependencies                 : coco : '>= 0.7.0'
+
+scripts                         : test:'expresso'
+repository                      : type:'git', url:'git://github.com/dsc/operator.git'
+bugs                            : url:'http://github.com/dsc/operator/issues'
+
+engine                          : node:'>=0.6.x'
+license                         : 'MIT'
