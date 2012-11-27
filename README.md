@@ -1,29 +1,48 @@
 # operator.js
 
-Functional operators for JavaScript, usable in both the browser and the server.
+Functional operators for JavaScript, both client- and server-friendly.
 
 
-## Usage
+## Installation
 
-On the server, install it:
+- **Latest Version:** `0.1.1`  &mdash;  [operator.js][operator_js] / [operator.min.js][operator_min_js]
+
+Client-side, you need only include the [latest version of the `operator.js` file][operator_js] in your page (download or link); this will add a single global `operator` to `window`.
+
+You're also covered if you're using something like [require.js][require_js] or [browserify][browserify] to load your modules. Operator knows the module dance, and will check all of `exports`, `module`, and `define` so it can do the right thing.
+
+For usage in [node.js][node], install it via [npm][npm]:
 
 ```sh
 npm install operator
 ```
 
-And then just require it:
+...And then require it:
 
 ```js
 var op = require('operator');
 ```
 
-In the browser, you have a number of options. You can download this package and include `operator.js` somewhere, which will add a global `operator`. Alternatively, if you're using something like [require.js][require_js] to wrap your modules, operator will check for the `module` variable and properly set its exports.
-
-
 
 ## API
 
-Note: Throughout this API, "defined" means `x != null`, which is equivalent to `typeof x !== 'undefined' && x !== null`.
+**Contents**
+
+- [Value Operators](#value-operators)
+- [Test Operators](#test-operators)
+- [Arity Operators](#arity-operators)
+- [Accessor Operators](#accessor-operators)
+- [Inequality Operators](#inequality-operators)
+- [Mathematical Operators](#mathematical-operators)
+- [Logical Operators](#logical-operators)
+- [Bitwise Operators](#bitwise-operators)
+
+
+### A few Brief Notes
+
+- Everything lives in one namespace. I typically require it as `op`; when no module systems are present, it lives in a global named `operator`.
+- Throughout this API, I use "defined" to mean `x != null` (which is equivalent to `typeof x !== 'undefined' && x !== null`).
+- *In progress! Use the source, Luke.*
 
 
 ### Value Operators
@@ -39,6 +58,7 @@ Identity operator.
 Constant operator: returns a function which returns `k`.
 
 #### nop()
+#### noop()
 
 No-op operator (technically returns `undefined`).
 
@@ -192,6 +212,29 @@ Log base-2.
 #### strip(s)
 
 
+## Feedback
+
+Find a bug or want to contribute? Open a ticket (or fork the source!) on [github][project].
+You're also welcome to send me email at [dsc@less.ly][dsc_email].
+
+
 ## License
 
-MIT: http://dsc.mit-license.org/
+`operator.js` was written by [David Schoonover][dsc] (in [Coco][coco], a dialect of [CoffeeScript][coffeescript] that compiles down to JavaScript). It is open-source software and freely available under the [MIT License][mit_license].
+
+
+
+[project]: https://github.com/dsc/operator.js "operator.js on GitHub"
+[dsc]: https://github.com/dsc/ "David Schoonover"
+[dsc_email]: mailto:dsc+emitters@less.ly?subject=operator.js "dsc@less.ly"
+[mit_license]: http://dsc.mit-license.org/ "MIT License"
+
+[operator_js]: https://raw.github.com/dsc/operator.js/latest/operator.js "operator.js"
+[operator_min_js]: https://raw.github.com/dsc/operator.js/latest/operator.min.js "operator.min.js"
+
+[node]: http://nodejs.org/ "node.js"
+[npm]: http://npmjs.org/ "npm"
+[coco]: https://github.com/satyr/coco "Coco: Unfancy CoffeeScript"
+[coffeescript]: http://jashkenas.github.com/coffee-script/ "CoffeeScript: Unfancy JavaScript"
+[require_js]: http://requirejs.org/ "require.js"
+[browserify]: https://github.com/substack/node-browserify "browserify"

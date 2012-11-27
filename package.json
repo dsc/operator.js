@@ -1,8 +1,8 @@
 {
   "name": "operator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Functional operators",
-  "homepage": "https://github.com/dsc/operator.js/",
+  "homepage": "https://github.com/dsc/operator.js",
   "keywords": [
     "functional",
     "operator",
@@ -14,20 +14,14 @@
   "author": "David Schoonover <dsc@less.ly> (http://less.ly)",
   "main": "./operator",
   "devDependencies": {
-    "coco": ">= 0.7.0"
-  },
-  "scripts": {
-    "test": "expresso"
+    "coco": "== 0.9.x"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/dsc/operator.git"
+    "url": "https://github.com/dsc/operator.js.git"
   },
   "bugs": {
-    "url": "http://github.com/dsc/operator/issues"
-  },
-  "engine": {
-    "node": ">=0.6.x"
+    "url": "https://github.com/dsc/operator.js/issues"
   },
   "license": "MIT"
 }
