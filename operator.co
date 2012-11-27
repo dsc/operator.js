@@ -1,3 +1,14 @@
+/*
+ *      operator.js -- 0.1.1
+ *      (c) 2012 David Schoonover <dsc@less.ly>
+ *      operator.js is freely distributable under the MIT license.
+ *      
+ *      For all details and documentation:
+ *      https://github.com/dsc/operator.js
+ */
+
+VERSION = '0.1.1'
+
 DASH_PATTERN = /-/g
 STRIP_PAT = /(^\s*|\s*$)/g
 FALSEY = /^\s*(?:no|off|false)\s*$/i
@@ -19,6 +30,7 @@ if typeof define is 'function' and define.amd
 
 
 op import {
+    VERSION,
     
     ### Value Operators
     
