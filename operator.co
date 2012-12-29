@@ -134,7 +134,12 @@ op import {
     flrdiv    : (x,y)  ->  Math.floor(x / y)
     mod       : (x,y)  ->  x  % y
     neg       : (x)    ->  -x
-    log2      : (n)    -> Math.log n / Math.LN2
+    log2      : (n)    ->  Math.log(n) / Math.LN2
+    
+    log10 : (n, threshhold=1e-9) ->
+        v = Math.log(n) / Math.LN10
+        r = Math.round v
+        if Math.abs(r - v) < threshhold then r else v
     
     
     ### Logical Operators
