@@ -1,12 +1,14 @@
 name                            : 'operator'
-version                         : '0.1.1'
+version                         : '0.1.2'
 description                     : 'Functional operators'
 homepage                        : 'https://github.com/dsc/operator.js'
-keywords                        : <[ functional operator util server client browser ]>
+keywords                        : <[ operator functional util server client browser ]>
 author                          : 'David Schoonover <dsc@less.ly> (http://less.ly)'
 
 main                            : './operator'
 devDependencies                 : coco : '== 0.9.x'
+
+scripts                         : prepublish: 'coco -c operator.co && uglifyjs -o operator.min.js operator.js'
 
 repository                      : type:'git', url:'https://github.com/dsc/operator.js.git'
 bugs                            : url:'https://github.com/dsc/operator.js/issues'
