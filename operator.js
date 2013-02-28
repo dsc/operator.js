@@ -1,5 +1,5 @@
 /*
- *      operator.js -- 0.1.1
+ *      operator.js -- 0.1.2
  *      (c) 2012 David Schoonover <dsc@less.ly>
  *      operator.js is freely distributable under the MIT license.
  *      
@@ -8,7 +8,7 @@
  */
 (function(){
   var VERSION, DASH_PATTERN, STRIP_PAT, FALSEY, op, slice$ = [].slice;
-  VERSION = '0.1.1';
+  VERSION = '0.1.2';
   DASH_PATTERN = /-/g;
   STRIP_PAT = /(^\s*|\s*$)/g;
   FALSEY = /^\s*(?:no|off|false)\s*$/i;
@@ -33,7 +33,7 @@
     };
   };
   op.nop = function(){};
-  op.noop = op.noop;
+  op.noop = op.nop;
   op.kThis = function(){
     return this;
   };
@@ -53,10 +53,11 @@
     return o == null;
   };
   op.isK = function(k){
-    return function(v){
-      return v === k;
+    return function(it){
+      return it === k;
     };
   };
+  op.first = op.I;
   op.second = function(_, a){
     return a;
   };
@@ -72,11 +73,16 @@
       };
     }
   };
-  op.flip = function(fn){
+  op.it = function(fn, cxt){
+    return function(it){
+      return fn.call(cxt != null ? cxt : this, it);
+    };
+  };
+  op.flip = function(fn, cxt){
     return function(a, b){
       arguments[0] = b;
       arguments[1] = a;
-      return fn.apply(this, arguments);
+      return fn.apply(cxt != null ? cxt : this, arguments);
     };
   };
   op.aritize = function(fn, cxt, n){
@@ -86,11 +92,6 @@
     }
     return function(){
       return fn.apply(cxt != null ? cxt : this, [].slice.call(arguments, 0, n));
-    };
-  };
-  op.it = function(fn, cxt){
-    return function(it){
-      return fn.call(cxt != null ? cxt : this, it);
     };
   };
   op.khas = function(k, o){
@@ -135,7 +136,7 @@
     return o;
   };
   op.thiskvset = function(k, v){
-    if (k != null) {
+    if (this && k != null) {
       this[k] = v;
     }
     return this;
@@ -151,9 +152,7 @@
     return function(obj){
       var _args;
       _args = slice$.call(arguments, 1);
-      if (obj != null && obj[name]) {
-        return obj[name].apply(obj, args.concat(_args));
-      }
+      return obj != null ? typeof obj[name] == 'function' ? obj[name].apply(null, args.concat(_args)) : void 8 : void 8;
     };
   };
   op.parseBool = function(s){
@@ -177,9 +176,8 @@
   op.toObject = function(v){
     if (typeof v === 'string' && op.strip(v)) {
       return JSON.parse(v);
-    } else {
-      return Object(v);
     }
+    return Object(v);
   };
   op.toDate = function(v){
     if (v == null || v instanceof Date) {
@@ -194,11 +192,7 @@
     if (x < y) {
       return -1;
     } else {
-      if (x > y) {
-        return 1;
-      } else {
-        return 0;
-      }
+      return +(x > y);
     }
   };
   op.eq = function(x, y){
@@ -240,8 +234,23 @@
   op.neg = function(x){
     return -x;
   };
+  op.clamp = function(min, max, n){
+    var ref$;
+    return (ref$ = min > n ? min : n) < max ? ref$ : max;
+  };
   op.log2 = function(n){
-    return Math.log(n / Math.LN2);
+    return Math.log(n) / Math.LN2;
+  };
+  op.log10 = function(n, threshhold){
+    var v, r;
+    threshhold == null && (threshhold = 1e-9);
+    v = Math.log(n) / Math.LN10;
+    r = Math.round(v);
+    if (Math.abs(r - v) < threshhold) {
+      return r;
+    } else {
+      return v;
+    }
   };
   op.is = function(x, y){
     return x === y;

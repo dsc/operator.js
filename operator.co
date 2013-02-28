@@ -1,5 +1,5 @@
 /*
- *      operator.js -- 0.1.1
+ *      operator.js -- 0.1.2
  *      (c) 2012 David Schoonover <dsc@less.ly>
  *      operator.js is freely distributable under the MIT license.
  *      
@@ -7,7 +7,7 @@
  *      https://github.com/dsc/operator.js
  */
 
-VERSION = '0.1.1'
+VERSION = '0.1.2'
 
 DASH_PATTERN = /-/g
 STRIP_PAT = /(^\s*|\s*$)/g
@@ -37,7 +37,7 @@ op import {
     I       : (x) -> x
     K       : (k) -> -> k
     nop     : ->
-    noop    : op.noop
+    noop    : op.nop
     kThis   : -> this
     kObject : -> {}
     kArray  : -> []
@@ -47,31 +47,31 @@ op import {
     
     ok      : (o)     -> o?
     notOk   : (o)     -> o!?
-    isK     : (k)     -> (v) -> v is k
+    isK     : (k)     -> -> it is k
     
     ### Arity Operators
+    first   : op.I
     second  : (_,a)   -> a
-    nth     : (n) ->
+    nth     : (n)     ->
         switch n
             case 0 then op.first
             case 1 then op.second
             default     -> arguments[n]
     
+    # only pass the first argument
+    it      : (fn, cxt) -> -> fn.call cxt ? this, it
+    
     # reverse the order of the first two args
-    flip    : (fn) ->
+    flip    : (fn, cxt) ->
         (a, b) ->
             arguments[0] = b
             arguments[1] = a
-            fn.apply this, arguments
+            fn.apply cxt ? this, arguments
     
     # only pass n args
     aritize : (fn, cxt, n) ->
         [n, cxt] = [cxt, null] if arguments.length < 3
         -> fn.apply cxt ? this, [].slice.call(arguments, 0, n)
-    
-    # only pass the first argument
-    it      : (fn, cxt) ->
-        -> fn.call cxt ? this, it
     
     
     
@@ -79,20 +79,19 @@ op import {
     khas      : (k,o)       ->  k in o
     kget      : (k,o)       ->  o[k]
     defkget   : (def,k,o)   ->  if k in o then o[k] else def
-    thisget   : (k)         ->  this[k]
+    thisget   : (k)         ->  @[k]
     vkset     : (o,v,k)     ->  o[k] = v if o and k?; o
     
     ### curry-ordered values & accessors
     has       : (o,k)       ->  k in o
     get       : (o,k)       ->  o[k]
     getdef    : (o,k,def)   ->  if k in o then o[k] else def
-    kvset     : (o,k,v)     ->  o[k] = v if o and k?; o
-    thiskvset : (k,v)       ->  @[k] = v if k?; this
+    kvset     : (o,k,v)     ->  o[k] = v if o    and k?; o
+    thiskvset : (k,v)       ->  @[k] = v if this and k?; this
     
     prop      : (k) -> (o) -> o[k]
     method    : (name, ...args) ->
-        (obj, ..._args) ->
-            obj[name] ...args.concat(_args) if obj?[name]
+        (obj, ..._args) -> obj?[name]? ...args.concat(_args)
     
     ### type coercion (w/ limited parameters for mapping)
     parseBool   : (s) ->
@@ -106,10 +105,8 @@ op import {
     toRegExp    : (v) -> new RegExp v
     
     toObject : (v) ->
-        if typeof v is 'string' and op.strip(v)
-            JSON.parse v
-        else
-            Object v
+        return JSON.parse v if typeof v is 'string' and op.strip(v)
+        Object v
     
     toDate : (v) ->
         return v if v!? or v instanceof Date
@@ -118,7 +115,7 @@ op import {
     
     
     ### Inequality Operators
-    cmp       : (x,y)  ->  if x < y then -1 else (if x > y then 1 else 0)
+    cmp       : (x,y)  ->  if x < y then -1 else +(x > y)
     eq        : (x,y)  ->  x == y
     ne        : (x,y)  ->  x != y
     gt        : (x,y)  ->  x  > y
@@ -134,8 +131,10 @@ op import {
     flrdiv    : (x,y)  ->  Math.floor(x / y)
     mod       : (x,y)  ->  x  % y
     neg       : (x)    ->  -x
-    log2      : (n)    ->  Math.log(n) / Math.LN2
     
+    clamp     : (min, max, n) -> min >? n <? max
+    
+    log2  : (n) ->  Math.log(n) / Math.LN2
     log10 : (n, threshhold=1e-9) ->
         v = Math.log(n) / Math.LN10
         r = Math.round v
