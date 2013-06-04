@@ -2,5 +2,9 @@
     "name"    : "operator",
     "version" : "0.1.2",
     "main"    : "operator.js",
-    "ignore"  : [ "**/.*", "*.co" ]
+    "ignore"  : [
+        "**/.*",
+        "*.co",
+        "node_modules"
+    ]
 }
