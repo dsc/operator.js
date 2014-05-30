@@ -7,21 +7,24 @@
  *      https://github.com/dsc/operator.js
  */
 (function(){
-  var VERSION, DASH_PATTERN, STRIP_PAT, FALSEY, op, slice$ = [].slice;
+  var VERSION, DASH_PATTERN, STRIP_PAT, FALSEY, op, root, slice$ = [].slice;
   VERSION = '0.1.2';
   DASH_PATTERN = /-/g;
   STRIP_PAT = /(^\s*|\s*$)/g;
   FALSEY = /^\s*(?:no|off|false)\s*$/i;
   op = {};
-  if (typeof exports != 'undefined' && exports !== null) {
-    op = exports;
-  } else if (typeof window != 'undefined' && window !== null) {
-    window.operator = op;
-  }
-  if (typeof define === 'function' && define.amd) {
+  root = (typeof window != 'undefined' && window !== null) || function(){
+    return this;
+  }();
+  if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
+    root.operator = op;
     define('operator', [], function(require, exports, module){
       return module.exports = op;
     });
+  } else if ((typeof exports != 'undefined' && exports !== null) && !exports.nodeType) {
+    op = exports.operator = exports;
+  } else {
+    root.operator = op;
   }
   op.VERSION = VERSION;
   op.I = function(x){
@@ -195,6 +198,15 @@
       return +(x > y);
     }
   };
+  op.cmpKey = function(k){
+    return function(x, y){
+      if (x[k] < y[k]) {
+        return -1;
+      } else {
+        return +(x[k] > y[k]);
+      }
+    };
+  };
   op.eq = function(x, y){
     return x == y;
   };
@@ -234,9 +246,18 @@
   op.neg = function(x){
     return -x;
   };
+  op.min = function(xs){
+    return Math.min.apply(Math, xs);
+  };
+  op.max = function(xs){
+    return Math.max.apply(Math, xs);
+  };
   op.clamp = function(min, max, n){
     var ref$;
     return (ref$ = min > n ? min : n) < max ? ref$ : max;
+  };
+  op.lerp = function(min, max, n){
+    return min + n * (max - min);
   };
   op.log2 = function(n){
     return Math.log(n) / Math.LN2;

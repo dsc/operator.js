@@ -1,6 +1,6 @@
 {
   "name": "operator",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Functional operators",
   "homepage": "https://github.com/dsc/operator.js",
   "keywords": [
@@ -14,10 +14,7 @@
   "author": "David Schoonover <dsc@less.ly> (http://less.ly)",
   "main": "./operator",
   "devDependencies": {
-    "coco": "== 0.9.x"
-  },
-  "scripts": {
-    "prepublish": "coco -c operator.co && uglifyjs -o operator.min.js operator.js"
+    "coco": "0.9.x"
   },
   "repository": {
     "type": "git",

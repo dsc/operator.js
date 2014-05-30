@@ -14,23 +14,25 @@ STRIP_PAT = /(^\s*|\s*$)/g
 FALSEY = /^\s*(?:no|off|false)\s*$/i
 
 
-# Module systems magic dance
+#### Module systems magic dance ####
 op = {}
+root = window? or do -> this
 
-
-# CommonJS and Node
-if exports?
-    op = exports
-# Fallback to exposing a global
-else if window?
-    window.operator = op
 # AMD / require.js
-if typeof define is 'function' and define.amd
+if typeof define == 'function' and typeof define.amd == 'object' and define.amd
+    root.operator = op
     define 'operator', [], (require, exports, module) -> module.exports = op
+# CommonJS and Node
+else if exports? and not exports.nodeType
+    op = exports.operator = exports
+# browser or Rhino
+else
+    root.operator = op
+
 
 
 op import {
-    VERSION,
+    VERSION
     
     ### Value Operators
     
@@ -116,6 +118,7 @@ op import {
     
     ### Inequality Operators
     cmp       : (x,y)  ->  if x < y then -1 else +(x > y)
+    cmpKey    : (k)    -> (x,y) -> if x[k] < y[k] then -1 else +(x[k] > y[k])
     eq        : (x,y)  ->  x == y
     ne        : (x,y)  ->  x != y
     gt        : (x,y)  ->  x  > y
@@ -128,11 +131,14 @@ op import {
     sub       : (x,y)  ->  x  - y
     mul       : (x,y)  ->  x  * y
     div       : (x,y)  ->  x  / y
-    flrdiv    : (x,y)  ->  Math.floor(x / y)
+    flrdiv    : (x,y)  ->  Math.floor x / y
     mod       : (x,y)  ->  x  % y
     neg       : (x)    ->  -x
     
+    min       : (xs)   -> Math.min.apply Math, xs
+    max       : (xs)   -> Math.max.apply Math, xs
     clamp     : (min, max, n) -> min >? n <? max
+    lerp      : (min, max, n) -> min + n * (max - min)
     
     log2  : (n) ->  Math.log(n) / Math.LN2
     log10 : (n, threshhold=1e-9) ->
